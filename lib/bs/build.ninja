@@ -1,0 +1,41 @@
+g_std_incl = /Users/Alexis/Documents/GitHub/lyon/re-matrix/node_modules/bs-platform/lib/ocaml
+g_pkg_flg = -bs-package-name re-matrix -bs-ns ReMatrix
+src_root_dir = /Users/Alexis/Documents/GitHub/lyon/re-matrix
+bsc = /Users/Alexis/Documents/GitHub/lyon/re-matrix/node_modules/bs-platform/lib/bsc.exe
+bsdep = /Users/Alexis/Documents/GitHub/lyon/re-matrix/node_modules/bs-platform/lib/bsb_helper.exe
+warnings =  -warn-error +101
+bsc_flags = 
+ppx_flags = 
+g_dpkg_incls = 
+g_ns = -bs-ns ReMatrix
+bsb_dir_group = 0
+g_lib_incls = -I . -I src
+rule build_ast_from_re
+  command = $bsc  $warnings -color always $bsc_flags -o $out -bs-syntax-only -bs-binary-ast $in
+  description = [34mBuilding[39m [2m${out}[22m
+build  src/Test.reast : build_ast_from_re $src_root_dir/src/Test.re
+rule build_deps
+  command = $bsdep -hash 0a2850c7b8e06e62f7b5bf5e6db0611d $g_ns -g $bsb_dir_group $in
+  restat = 1
+  description = [34mBuilding[39m [2m${out}[22m
+build  src/Test.d : build_deps src/Test.reast
+rule ml_cmj_cmi
+  command = $bsc -nostdlib $g_pkg_flg -color always -bs-suffix $g_lib_incls -I $g_std_incl $warnings $bsc_flags -o $out $in
+  dyndep = $in_e.d
+  restat = 1
+  description = [34mBuilding[39m [2m${out}[22m
+build  src/Test-ReMatrix.cmj |  src/Test-ReMatrix.cmi $src_root_dir/lib/js/src/Test.bs.js : ml_cmj_cmi src/Test.reast ||  src/Test.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:lib/js/src
+build  src/Vec2.reast : build_ast_from_re $src_root_dir/src/Vec2.re
+build  src/Vec2.d : build_deps src/Vec2.reast
+build  src/Vec2-ReMatrix.cmj |  src/Vec2-ReMatrix.cmi $src_root_dir/lib/js/src/Vec2.bs.js : ml_cmj_cmi src/Vec2.reast ||  src/Vec2.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:lib/js/src
+build  src/Utils.reast : build_ast_from_re $src_root_dir/src/Utils.re
+build  src/Utils.d : build_deps src/Utils.reast
+build  src/Utils-ReMatrix.cmj |  src/Utils-ReMatrix.cmi $src_root_dir/lib/js/src/Utils.bs.js : ml_cmj_cmi src/Utils.reast ||  src/Utils.d
+  g_pkg_flg = $g_pkg_flg  -bs-package-output commonjs:lib/js/src
+rule build_package
+  command = $bsc -w -49 -color always -no-alias-deps  $in
+  restat = 1
+  description = [34mBuilding[39m [2m${out}[22m
+build  ReMatrix.cmi : build_package ReMatrix.mlmap
