@@ -1,0 +1,27 @@
+{
+  "name": "@lxsmnsyc/re-matrix",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "bsb -make-world",
+    "start": "bsb -make-world -w",
+    "clean": "bsb -clean-world"
+  },
+  "keywords": [
+    "ReasonML",
+    "Vector",
+    "Matrix"
+  ],
+  "description": "Matrix and Vector operations for ReasonML",
+  "main": "index.js",
+  "repository": "https://github.com/LXSMNSYC/re-matrix.git",
+  "bugs": {
+    "url": "https://github.com/LXSMNSYC/re-matrix/issues"
+  },
+  "homepage": "https://github.com/LXSMNSYC/re-matrix",
+  "author": "Alexis Munsayac <alexis.munsayac@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "bs-platform": "^7.1.0"
+  }
+}
